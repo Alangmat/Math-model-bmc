@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математический аппарат класса Ловчий - Warspear Online</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page {
+            margin: 2.5cm;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            color: #000;
+        }
+        
+        h1 {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: center;
+            margin: 40px 0 30px 0;
+            page-break-before: always;
+        }
+        
+        h1:first-of-type {
+            page-break-before: auto;
+            margin-top: 0;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            text-align: justify;
+            margin: 10px 0;
+        }
+        
+        .formula {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 13pt;
+        }
+        
+        .references {
+            margin: 15px 0;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-left: 3px solid #666;
+        }
+        
+        .references p {
+            margin: 5px 0;
+        }
+        
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .toc {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .toc h2 {
+            border: none;
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .toc a {
+            color: #000;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            margin: 20px 0 10px 0;
+            page-break-before: auto;
+        }
+        
+        .header p {
+            font-size: 14pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        .section {
+            margin: 30px 0;
+        }
+        
+        .note {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+        }
+        
+        @media print {
+            body {
+                max-width: 100%;
+            }
+            
+            h1 {
+                page-break-before: always;
+            }
+            
+            h1:first-of-type {
+                page-break-before: auto;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Математический аппарат класса Ловчий</h1>
+        <p>Warspear Online</p>
+        <p>Система моделирования урона</p>
+    </div>
+    
+    <div class="toc">
+        <h2>Содержание</h2>
+        <ul>
+            <li><a href="#coefficients">1. Коэффициенты</a></li>
+            <li style="padding-left: 40px;"><a href="#attack-strength-coef">1.1. Коэффициент силы атаки</a></li>
+            <li style="padding-left: 40px;"><a href="#accuracy-coef">1.2. Коэффициент точности</a></li>
+            <li style="padding-left: 40px;"><a href="#legendary-attack-speed-coef">1.3. Легендарный коэффициент скорости атаки</a></li>
+            <li style="padding-left: 40px;"><a href="#piercing-attack-coef">1.4. Коэффициент пронзающей атаки</a></li>
+            <li style="padding-left: 40px;"><a href="#rage-coef">1.5. Коэффициент ярости</a></li>
+            <li><a href="#stats">2. Характеристики персонажа</a></li>
+            <li style="padding-left: 40px;"><a href="#attack-strength">2.1. Сила атаки</a></li>
+            <li style="padding-left: 40px;"><a href="#depths-fury">2.2. Гнев глубин</a></li>
+            <li style="padding-left: 40px;"><a href="#critical-hit">2.3. Критический удар</a></li>
+            <li style="padding-left: 40px;"><a href="#skill-cooldown">2.4. Перезарядка навыков</a></li>
+            <li style="padding-left: 40px;"><a href="#penetration">2.5. Пробивная способность</a></li>
+            <li style="padding-left: 40px;"><a href="#piercing-attack">2.6. Пронзающая атака</a></li>
+            <li style="padding-left: 40px;"><a href="#facilitation">2.7. Содействие</a></li>
+            <li style="padding-left: 40px;"><a href="#accuracy">2.8. Точность</a></li>
+            <li style="padding-left: 40px;"><a href="#rage">2.9. Ярость</a></li>
+            <li style="padding-left: 40px;"><a href="#critical-damage">2.10. Сила критического урона</a></li>
+            <li style="padding-left: 40px;"><a href="#attack-speed">2.11. Скорость атаки</a></li>
+            <li><a href="#damage">3. Расчёт урона</a></li>
+            <li style="padding-left: 40px;"><a href="#autoattack-damage">3.1. Урон от автоатаки</a></li>
+            <li style="padding-left: 40px;"><a href="#lunar-touch-damage">3.2. Урон от Лунного касания</a></li>
+            <li><a href="#talents">4. Таланты</a></li>
+            <li style="padding-left: 40px;"><a href="#harmonious-power">4.1. Гармония силы</a></li>
+            <li><a href="#damage-percent">5. Процентные модификаторы урона</a></li>
+            <li style="padding-left: 40px;"><a href="#magical-damage-percent">5.1. Проценты магического урона</a></li>
+            <li style="padding-left: 40px;"><a href="#physical-damage-percent">5.2. Проценты физического урона</a></li>
+        </ul>
+    </div>
+
+    <h1 id="coefficients">1. Коэффициенты</h1>
+    
+    <div class="section">
+        <h2 id="attack-strength-coef">1.1. Коэффициент силы атаки</h2>
+        <p>Коэффициент силы атаки определяет итоговое увеличение урона на основе характеристики силы атаки персонажа.</p>
+        
+        <div class="formula">
+            \[c = 1 + \frac{AttackStrength}{100}\]
+        </div>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#attack-strength">Сила атаки (AttackStrength)</a></p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="accuracy-coef">1.2. Коэффициент точности</h2>
+        <p>Коэффициент точности учитывает разницу между показателями уклонения цели и точности атакующего.</p>
+        
+        <div class="formula">
+            \[c = 1 - \frac{\max(0, dodge - accuracy)}{100}\]
+        </div>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#accuracy">Точность (accuracy)</a></p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="legendary-attack-speed-coef">1.3. Легендарный коэффициент скорости атаки</h2>
+        <p>Специальный коэффициент, учитывающий активность всех навыков персонажа и время их перезарядки.</p>
+        
+        <div class="formula">
+            \[s = \sum \left(\frac{active}{cooldown}\right) \times 1.55\]
+        </div>
+        
+        <p class="note">В сумму входят показатели активности всех навыков и время на их перезарядку.</p>
+        
+        <div class="formula">
+            \[0 \le s \le 1\]
+        </div>
+        
+        <div class="formula">
+            \[coefficient = -0.3 \times s + 1\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="piercing-attack-coef">1.4. Коэффициент пронзающей атаки</h2>
+        <p>Коэффициент определяет эффективность прохождения защиты цели с учётом пробивной способности и пронзающей атаки.</p>
+        
+        <div class="formula">
+            \[c = 1 - \frac{\max\left(0, (protection - penetration) \times \left(1 - \frac{piercingAttack}{100}\right)\right)}{100}\]
+        </div>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#penetration">Пробивная способность (penetration)</a></p>
+            <p>• <a href="#piercing-attack">Пронзающая атака (piercingAttack)</a></p>
+            <p>• protection</p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="rage-coef">1.5. Коэффициент ярости</h2>
+        <p>Коэффициент ярости вычисляется на основе времени действия эффекта, показателя ярости и частоты активации навыков.</p>
+        
+        <div class="formula">
+            \[time = (10 + additionalContinuousTalent) \times facilitation\]
+        </div>
+        
+        <div class="formula">
+            \[s = \sum \frac{active}{delay}\]
+        </div>
+        
+        <p class="note">В учёт суммы попадают следующие навыки и источники урона:</p>
+        <p>• Атака</p>
+        <p>• Шаровая молния</p>
+        <p>• Лунное касание</p>
+        
+        <div class="formula">
+            \[coefficient = time \times RageFinal \times s\]
+        </div>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#rage">Ярость (RageFinal)</a></p>
+            <p>• <a href="#facilitation">Содействие (facilitation)</a></p>
+        </div>
+    </div>
+
+    <h1 id="stats">2. Характеристики персонажа</h1>
+    
+    <div class="section">
+        <h2 id="attack-strength">2.1. Сила атаки</h2>
+        <p>Базовая характеристика, определяющая физический урон персонажа.</p>
+        
+        <div class="formula">
+            \[temp = equipment + pot + scroll + pet\]
+        </div>
+        
+        <div class="formula">
+            \[AttackStrengthFinal = temp\]
+        </div>
+        
+        <div class="formula">
+            \[AttackStrengthLuna = temp + predatoryBondTalent\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="depths-fury">2.2. Гнев глубин</h2>
+        <p>Специальная характеристика, получаемая от экипировки и свитков.</p>
+        
+        <div class="formula">
+            \[DepthsFuryFinal = equipment + scroll\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="critical-hit">2.3. Критический удар</h2>
+        <p>Вероятность нанесения критического урона для героя и питомца Луна.</p>
+        
+        <div class="formula">
+            \[temp = equipment + pot + scroll + castleFinal - castleStart + merman + godsAid + blessingOfTheMoon\]
+        </div>
+        
+        <div class="formula">
+            \[CriticalHitHeroFinal = temp\]
+        </div>
+        
+        <div class="formula">
+            \[CriticalHitLunaFinal = temp + blessingOfTheMoon + godsAid\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="skill-cooldown">2.4. Перезарядка навыков</h2>
+        <p>Характеристика, уменьшающая время восстановления способностей.</p>
+        
+        <div class="formula">
+            \[SkillCooldownFinal = equipment + pot + scroll + pet + castleFinal - castleStart + merman + doubleConcentration\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="penetration">2.5. Пробивная способность</h2>
+        <p>Показатель игнорирования защиты противника.</p>
+        
+        <div class="formula">
+            \[temp = equipment + pot + scroll + pet + castleFinal - castleStart + merman + blessingOfTheMoon\]
+        </div>
+        
+        <div class="formula">
+            \[PenetrationFinal = temp\]
+        </div>
+        
+        <div class="formula">
+            \[PenetrationLuna = temp + blessingOfTheMoon\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="piercing-attack">2.6. Пронзающая атака</h2>
+        <p>Процентное игнорирование остаточной защиты цели.</p>
+        
+        <div class="formula">
+            \[PiercingAttackFinal = equipment + pot + scroll\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="facilitation">2.7. Содействие</h2>
+        <p>Характеристика, влияющая на длительность положительных эффектов.</p>
+        
+        <div class="formula">
+            \[FacilitationFinal = equipment + pot + scroll + pet\]
+        </div>
+        
+        <div class="formula">
+            \[FacilitationLuna = FacilitationFinal\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="accuracy">2.8. Точность</h2>
+        <p>Вероятность попадания атак по цели.</p>
+        
+        <div class="formula">
+            \[temp = equipment + pot + scroll + pet + castleFinal - castleStart + merman\]
+        </div>
+        
+        <div class="formula">
+            \[AccuracyHeroFinal = temp\]
+        </div>
+        
+        <div class="formula">
+            \[AccuracyLunaFinal = temp\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="rage">2.9. Ярость</h2>
+        <p>Характеристика для активации эффектов ярости.</p>
+        
+        <div class="formula">
+            \[RageFinal = equipment + pot + scroll + pet\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="critical-damage">2.10. Сила критического урона</h2>
+        <p>Множитель урона при критическом попадании.</p>
+        
+        <div class="formula">
+            \[CriticalDamageFinal = equipment + pot + scroll + pet + doubleConcentration + godsAid + roarTalent\]
+        </div>
+        
+        <div class="formula">
+            \[CriticalDamageLuna = CriticalDamageFinal + godsAid + merman\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="attack-speed">2.11. Скорость атаки</h2>
+        <p>Характеристика, уменьшающая время между автоатаками.</p>
+        
+        <div class="formula">
+            \[AttackSpeedFinal = equipment + pot + scroll + pet + castleFinal - castleStart + merman + doubleConcentration + godsAid\]
+        </div>
+    </div>
+
+    <h1 id="damage">3. Расчёт урона</h1>
+    
+    <div class="section">
+        <h2 id="autoattack-damage">3.1. Урон от автоатаки</h2>
+        <p>Расчёт урона в минуту от базовых атак персонажа.</p>
+        
+        <div class="formula">
+            \[AttackDelay = \frac{Attack.TimeDelay \times \frac{100 - AttackSpeedFinal}{100}}{CoefficientAttackSpeed}\]
+        </div>
+        
+        <div class="formula">
+            \[DPM = \frac{damage}{AttackDelay} \times 60 \times \prod mods\]
+        </div>
+        
+        <p class="note"><strong>Модификаторы (mods) включают в себя:</strong></p>
+        <p>• <a href="#attack-strength-coef">Коэффициент силы атаки (CoefficientOfAttackStrength)</a></p>
+        <p>• <a href="#piercing-attack-coef">Коэффициент пронзающей атаки (CoefficientOfPiercingAttack)</a></p>
+        <p>• CoefficientOfCriticalHitHeroForAutoattack</p>
+        <p>• <a href="#accuracy-coef">Коэффициент точности (CoefficientOfAccuracy)</a></p>
+        <p>• coefficientPredatoryDeliriumTalent</p>
+        <p>• coefficientBPDungeon</p>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#attack-speed">Скорость атаки (AttackSpeedFinal)</a></p>
+            <p>• <a href="#legendary-attack-speed-coef">Легендарный коэффициент скорости атаки (CoefficientAttackSpeed)</a></p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="lunar-touch-damage">3.2. Урон от Лунного касания</h2>
+        <p>Расчёт урона в минуту от навыка "Лунное касание".</p>
+        
+        <div class="formula">
+            \[damage = (base + heroDamage \times coefficient) \times (1 + 0.12 \times hasRelic)\]
+        </div>
+        
+        <div class="formula">
+            \[cooldown = \frac{baseTime}{1 + \frac{skillCooldown}{100}} + timeCast\]
+        </div>
+        
+        <div class="formula">
+            \[DPM = \frac{damage}{cooldown} \times 60 \times \prod mods\]
+        </div>
+        
+        <p class="note"><strong>Модификаторы (mods) включают в себя:</strong></p>
+        <p>• CoefficientCastle</p>
+        <p>• CoefficientBestialRageTalent</p>
+        <p>• CoefficientMomentOfPowerTalent</p>
+        <p>• CoefficientOfPenetration</p>
+        <p>• CoefficientOfCriticalHitHeroForSkill</p>
+        <p>• <a href="#accuracy-coef">Коэффициент точности (CoefficientOfAccuracy)</a></p>
+        <p>• coefficientPredatoryDeliriumTalent</p>
+        <p>• coefficientBPDungeon</p>
+        
+        <div class="references">
+            <p><strong>Ссылки:</strong></p>
+            <p>• <a href="#skill-cooldown">Перезарядка навыков (skillCooldown)</a></p>
+        </div>
+    </div>
+
+    <h1 id="talents">4. Таланты</h1>
+    
+    <div class="section">
+        <h2 id="harmonious-power">4.1. Гармония силы</h2>
+        <p>Талант, зависящий от количества экипированных предметов определённых слотов.</p>
+        
+        <div class="formula">
+            \[harmoniousPowerMDD = helmet + body + hands + belt + foots\]
+        </div>
+        
+        <div class="formula">
+            \[harmoniousPowerPDD = helmet + body + hands + belt + foots\]
+        </div>
+    </div>
+
+    <h1 id="damage-percent">5. Процентные модификаторы урона</h1>
+    
+    <div class="section">
+        <h2 id="magical-damage-percent">5.1. Проценты магического урона</h2>
+        <p>Процентное увеличение магического урона от различных источников.</p>
+        
+        <div class="formula">
+            \[jewelry = cloak + amulet + braceletL + braceletR + ringL + ringR + set\]
+        </div>
+        
+        <div class="formula">
+            \[percentMagicalDDStart = passive + jewelry + guild + talents + castle\]
+        </div>
+        
+        <div class="formula">
+            \[percentMagicalDD = passive + jewelry + guild + talents + castle + pairingTalent + additional\]
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 id="physical-damage-percent">5.2. Проценты физического урона</h2>
+        <p>Процентное увеличение физического урона от различных источников.</p>
+        
+        <div class="formula">
+            \[jewelry = cloak + amulet + braceletL + braceletR + ringL + ringR + set\]
+        </div>
+        
+        <div class="formula">
+            \[percentPhysicalDDStart = passive + jewelry + guild + talents + castle\]
+        </div>
+        
+        <div class="formula">
+            \[percentPhysicalDD = passive + jewelry + guild + talents + castle + pairingTalent + additional\]
+        </div>
+    </div>
+
+    <script>
+        // Кнопка для печати/сохранения в PDF
+        window.onload = function() {
+            const printBtn = document.createElement('button');
+            printBtn.textContent = 'Сохранить как PDF';
+            printBtn.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; z-index: 1000;';
+            printBtn.onclick = function() {
+                window.print();
+            };
+            document.body.appendChild(printBtn);
+        };
+    </script>
+</body>
+</html>
