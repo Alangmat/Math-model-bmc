@@ -29,6 +29,9 @@
     .page-header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
     .badge { display: inline-flex; gap: 8px; align-items: center; white-space: nowrap; padding: 5px 10px; border: 1px solid rgba(45, 212, 191, .5); border-radius: 999px; background: rgba(45, 212, 191, .10); color: #ccfbf1; font-size: 12px; }
     .badge-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); }
+    .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+    .header-link { display: inline-flex; align-items: center; white-space: nowrap; padding: 5px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); color: var(--text); font-size: 12px; }
+    .header-link:hover { border-color: var(--accent); color: #ccfbf1; text-decoration: none; }
     .content { max-width: 1040px; margin: 0 auto; }
     .group { margin-top: 26px; }
     .group > h2 { margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 21px; letter-spacing: 0; color: #fde68a; }
@@ -121,7 +124,10 @@
         <h1>Математический аппарат Ловчего</h1>
         <p>HTML-документация собрана из markdown-формул Obsidian.</p>
       </div>
-      <div class="badge"><span class="badge-dot"></span>55 файлов, обновлено 21.05.2026</div>
+      <div class="header-actions">
+        <a class="header-link" href="model-graph.html">Граф модели</a>
+        <div class="badge"><span class="badge-dot"></span>55 файлов, обновлено 21.05.2026</div>
+      </div>
     </header>
     <div class="content">
 <section class="group" id="group-общее">
